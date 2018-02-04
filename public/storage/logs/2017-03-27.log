@@ -1,0 +1,6 @@
+[2017-03-27 14:32:11] ParseIt.INFO: Parsing process - run [] []
+[2017-03-27 14:33:33] ParseIt.INFO: Parsing source - https://www.citilink.ru/catalog/mobile/cell_phones/?available=1&status=55395790&p=1&f=1376_214XIAOMI [] []
+[2017-03-27 14:33:55] ParseIt.ERROR: Url https://www.citilink.ru/catalog/mobile/cell_phones/436905/ return blank page [] []
+[2017-03-27 14:34:13] ParseIt.INFO: New - 0, update - 11, from - https://www.citilink.ru/catalog/mobile/cell_phones/?available=1&status=55395790&p=1&f=1376_214XIAOMI [] []
+[2017-03-27 14:34:13] ParseIt.INFO: Parsing source - https://www.citilink.ru/catalog/mobile/smartfony/?available=1&status=55395790&p=1&f=1376_214HUAWEI [] []
+[2017-03-27 14:35:27] ParseIt.INFO: New - 0, update - 32, from - https://www.citilink.ru/catalog/mobile/smartfony/?available=1&status=55395790&p=1&f=1376_214HUAWEI [] []
