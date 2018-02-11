@@ -20,7 +20,7 @@ class openCart{
             'quantity' => $data['quantity'],
             'stock_status_id' => $data['stock_status_id'],
             'price' => $data['price'],
-            'price_zak' => $data['price_purchase'],
+            //'price_zak' => $data['price_purchase'],
             'sort_order' => '1',
             'sku' => $data['sku'],
             'status' => $data['stock_status_id'] === 5 ? 0 : 1
@@ -74,7 +74,7 @@ class openCart{
             'stock_status_id' => $data['stock_status_id'],
             'image' => $image,
             'price' => $data['price'],
-            'price_zak' => $data['price_purchase'],
+            //'price_zak' => $data['price_purchase'],
             'sort_order' => '1',
             'sku' => $data['sku'],
             'status' => $data['stock_status_id'] === 5 ? 0 : 1,
@@ -87,7 +87,7 @@ class openCart{
 
         if( empty($product_id) ) return false;
 
-        $this->update('pi_data_set', array('product_id' => $product_id), array('id' => $data['id']));
+        //$this->update('pii_data_set', array('product_id' => $product_id), array('id' => $data['id']));
 
         $sql = "UPDATE ".$this->prefix."product SET date_available=CURRENT_DATE WHERE product_id=".$product_id;
         $this->db->sql($sql);
@@ -187,7 +187,7 @@ class openCart{
 
     public function addProductToCatetgory( $product_id, $category_id, $main = 0 )
     {
-        $this->insert( $this->prefix."product_to_category", array('product_id'=>$product_id, 'category_id'=>$category_id, 'main_category'=>$main) );
+        $this->insert( $this->prefix."product_to_category", array('product_id'=>$product_id, 'category_id'=>$category_id) );
     }
 
     public function addAttribute( $attribute_group_id, $name, $sort )
@@ -488,8 +488,8 @@ class openCart{
 				}
 			}
         }
-        //related tables
-//        $this->update( "pi_data_set", array('status'=> 1), array('id' => $data['id']) );
+
+        return $product_id;
     }
 
     public function productUpdate( $data, $product_id )
@@ -572,9 +572,8 @@ class openCart{
 				}
 			}
         }
-        //related tables
 
-//        $this->update( PREFIX."data", array('status'=> 1), array('id' => $data['id']) );
+        return $product_id;
     }
 
     public function uploadImage($url)
@@ -593,15 +592,14 @@ class openCart{
         {
             $content = file_get_contents($url);
             file_put_contents($fn, $content);
-
-            $img = Image::make($fn);
-            $width = $img->width();
-            $watermark = Image::make(base_path().'/../image/nakladka_png_mobzilla.png');
-            $watermark->resize($width, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-            $img->insert($watermark, 'center');
-            $img->save($fn);
+//            $img = Image::make($fn);
+//            $width = $img->width();
+//            $watermark = Image::make(base_path().'/../image/nakladka_png_mobzilla.png');
+//            $watermark->resize($width, null, function ($constraint) {
+//                $constraint->aspectRatio();
+//            });
+//            $img->insert($watermark, 'center');
+//            $img->save($fn);
         }
         return $image;
     }

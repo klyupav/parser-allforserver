@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $updated_at
  * @property int $donor_id
  * @property int $category_id
- * @property int $category_id_2
  * @property int $procent_nakrutki
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Source whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Source whereDonorId($value)
@@ -43,7 +42,6 @@ class Source extends Model
         'hash',
         'donor_id',
         'category_id',
-        'category_id_2',
         'procent_nakrutki'
     ];
 

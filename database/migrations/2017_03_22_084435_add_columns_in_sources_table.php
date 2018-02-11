@@ -15,7 +15,6 @@ class AddColumnsInSourcesTable extends Migration
     {
         Schema::table('sources', function (Blueprint $table){
             $table->integer('category_id');
-            $table->integer('category_id_2');
             $table->integer('procent_nakrutki');
         });
     }

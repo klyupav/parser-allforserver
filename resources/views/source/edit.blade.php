@@ -18,11 +18,7 @@
                     {!! $errors->first('url','<p class="help-block">:message</p>') !!}
                 </div>
                 <div class="form-group{{ ($errors->has('category_id')) ? $errors->first('category_id') : '' }}">
-                    <input type="text" name="category_id" class="form-control" placeholder="ID категория на mobzilla.su" value="{{$source->category_id}}">
-                    {!! $errors->first('category_id','<p class="help-block">:message</p>') !!}
-                </div>
-                <div class="form-group{{ ($errors->has('category_id_2')) ? $errors->first('category_id_2') : '' }}">
-                    <input type="text" name="category_id_2" class="form-control" placeholder="ID категории на cifrolink.com" value="{{$source->category_id_2}}">
+                    <input type="text" name="category_id" class="form-control" placeholder="ID категории для экспорта" value="{{$source->category_id}}">
                     {!! $errors->first('category_id','<p class="help-block">:message</p>') !!}
                 </div>
                 <div class="form-group{{ ($errors->has('procent_nakrutki')) ? $errors->first('procent_nakrutki') : '' }}">

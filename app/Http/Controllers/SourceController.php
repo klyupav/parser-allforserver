@@ -77,7 +77,6 @@ class SourceController extends Controller
         $source = new Source();
         $source->url = $request->url;
         $source->category_id = $request->category_id;
-        $source->category_id_2 = $request->category_id_2;
         $source->procent_nakrutki = $request->procent_nakrutki;
         $source->type_id = 0;
         @$request->review == 'on' ? $source->review = true : $source->review = false;
@@ -134,7 +133,6 @@ class SourceController extends Controller
         $source = Source::findOrFail($id);
         $source->url = $request->url;
         $source->category_id = $request->category_id;
-        $source->category_id_2 = $request->category_id_2;
         $source->procent_nakrutki = $request->procent_nakrutki;
         @$request->review == 'on' ? $source->review = true : $source->review = false;
         $source->save();

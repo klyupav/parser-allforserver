@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Donors\MvideoRu;
-use App\Donors\CitilinkRu_Category;
-use App\Donors\Watches2uCom;
+use App\Donors\HpProNet;
 use App\Models\DataSet;
 use App\Models\Donor;
 use App\Models\Source;
@@ -84,23 +82,23 @@ class ParseitController extends Controller
         $lockfile = "lock-parsing.log";
         //@unlink($lockfile);die('aga');
 
-//        if( file_exists($lockfile))
-//        {
-//            $locktime = file_get_contents($lockfile);
-//            echo time()-$locktime;
-//            if( time()-$locktime > config('app.max_execute_time') + 180 )
-//            {
-//                @unlink($lockfile);
-//            }
-//            else
-//            {
-//                echo "ОТМЕНА - скрипт все еще работает<br />\n";
-//                exit;
-//            }
-//        }
+        if( file_exists($lockfile))
+        {
+            $locktime = file_get_contents($lockfile);
+            echo time()-$locktime;
+            if( time()-$locktime > config('app.max_execute_time') + 180 )
+            {
+                @unlink($lockfile);
+            }
+            else
+            {
+                echo "ОТМЕНА - скрипт все еще работает<br />\n";
+                exit;
+            }
+        }
         file_put_contents($lockfile, "$time_start");
 
-        $parser['MvideoRu'] = new MvideoRu();
+        $parser['HpProNet'] = new HpProNet();
 
 //        $proxy = ProxyList::getNextProxy();
 //        $content = $parser['CitilinkRu']->loadUrl('https://www.citilink.ru/geo/space/on_error_resolving/', [
@@ -130,23 +128,20 @@ class ParseitController extends Controller
                             $upd = 0;
                             LoggerController::logToFile("Parsing source - {$source->url}");
                             $results = $parser[$donor->class]->getSources($source->url);
+                            //print_r($results);die();
 //                            print_r($source->url);
 //                            die();
+//                            $results[0]['url'] = "http://www.hp-pro.net/Netshop/Servers-HP/Proliant-DL/120/833870-B21.html";
+//                            $results[0]['cookieFile'] = "/home/klyupav/www/allforserver/parseit/public/cookie/cookie-HpProNet.txt";
+//                            $results[0]['referer'] = "http://www.hp-pro.net/Netshop/Servers-HP/Proliant-DL/120/";
                             foreach ($results as $k => $result)
                             {
 //                                sleep(2);
-                                $param['headers'] = 'Cookie: MVID_CITY_ID=CityCZ_2446;';
                                 $param['cookieFile'] = $result['cookieFile'];
-
-//                                $result['url'] = "http://www.mvideo.ru/products/televizor-hisense-55k321uw-10008790";
-                                print_r($result);
-                                $content = $parser[$donor->class]->loadUrl($result['url'], $param);
-                                $data = $parser[$donor->class]->onSourceLoaded($content, $result['url'], $param);
-                                print_r($data);
-//                                die();
-//                                continue;
-//die();
-//                                sleep(15);
+                                //print_r($result);
+                                $content = $parser[$donor->class]->loadUrl($result['url'], $result);
+                                $data = $parser[$donor->class]->onSourceLoaded($content, $result['url'], $result);
+//                                print_r($data);die();
 
                                 if (empty($data)) {
                                     $data['hash'] = md5(md5($result['url']) . $source->donor_id);
@@ -173,12 +168,12 @@ class ParseitController extends Controller
                                     'hash' => 'required|string|size:32',
                                     'donor_id' => 'required|int|max:11',
                                     'source' => 'required|string|max:255',
-                                    'manufacturer' => 'required|string|max:255',
+                                    //'manufacturer' => 'required|string|max:255',
                                     'product_name' => 'required|string|max:255',
                                     'sku' => 'required|string|max:255',
                                     'stockin' => 'required|string|max:255',
 //                                    'categories' => 'required|string|max:255',
-                                    'old_price' => 'required|numeric',
+//                                    'old_price' => 'required|numeric',
                                     'price' => 'required|numeric',
                                     'description' => 'string',
 //                                'main_image' => 'required|string|max:255',
@@ -223,7 +218,7 @@ class ParseitController extends Controller
                         }
                         break;
                 }
-                break;
+                //break;
 //                die();
                 $now = time();
                 if ( $now - $time_start > config('app.max_execute_time') )
@@ -256,11 +251,11 @@ class ParseitController extends Controller
         {
             $locktime = file_get_contents($lockfile);
             echo time()-$locktime;
-            if( time()-$locktime > config('app.max_execute_time') + 180 ) 
+            if( time()-$locktime > config('app.max_execute_time') + 180 )
             {
                 @unlink($lockfile);
-            } 
-            else 
+            }
+            else
             {
                 echo "ОТМЕНА - скрипт все еще работает<br />\n";
                 exit;
@@ -280,30 +275,35 @@ class ParseitController extends Controller
         $oc = new openCart();
         $oc->db = $db;
         
-        while ($data = DataSet::getNext())
+        while ($dataset = DataSet::getNext())
         {
+            $data = $dataset->toArray();
+            $data['quantity'] = 999;
+            if ( $data['stockin'] === 'есть на складе' )
+                $data['stock_status_id'] = 7;
+            else
+                $data['stock_status_id'] = 5;
+
+            if ( $data['old_price'] )
+            {
+                $data['special'] = $data['price']; // Акционная цена
+                $data['price'] = $data['old_price']; // Перечеркнутая цена
+                $data['special'] = (int) ($data['special'] + (($data['special'] / 100) * $data['procent_nakrutki'])); // Добавляем процент к акционной цене
+            }
+            $data['price_purchase'] = $data['price']; // Закупочная цена
+            $data['price'] = (int) ($data['price'] + (($data['price'] / 100) * $data['procent_nakrutki'])); // Добавляем процент к цене
+
             try
             {
-                $data = $data->toArray();
-                $data['quantity'] = 999;
-                if ( $data['stockin'] === 'in stock' )
-                    $data['stock_status_id'] = 7;
-                else
-                    $data['stock_status_id'] = 5;
-
-                if ( $data['old_price'] )
-                {
-                    $data['special'] = $data['price']; // Акционная цена
-                    $data['price'] = $data['old_price']; // Перечеркнутая цена
-                    $data['special'] = (int) ($data['special'] + (($data['special'] / 100) * $data['procent_nakrutki'])); // Добавляем процент к акционной цене
-                }
-                $data['price_purchase'] = $data['price']; // Закупочная цена
-                $data['price'] = (int) ($data['price'] + (($data['price'] / 100) * $data['procent_nakrutki'])); // Добавляем процент к цене
-
                 if ( $pid = $oc->findProduct($data['product_id']) )
-                    $oc->productUpdate($data, $pid);
+                {
+                    $pid = $oc->productUpdate($data, $pid);
+                }
                 else
-                    $oc->productInsert($data);
+                {
+                    $pid = $oc->productInsert($data);
+                }
+                $dataset->update(['product_id' => $pid]);
             }
             catch (\Exception $e)
             {
@@ -327,6 +327,7 @@ class ParseitController extends Controller
                 unlink($lockfile);
                 die('end time execute');
             }
+            //break;
         }
         unlink($lockfile);
         // LoggerController::logToFile('Export to database - done');

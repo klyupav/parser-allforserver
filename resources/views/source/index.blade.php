@@ -19,8 +19,7 @@
                 <tr>
                     <th>No.</th>
                     <th>Ссылка</th>
-                    <th>ID категория на mobzilla.su</th>
-                    <th>ID категории на cifrolink.com</th>
+                    <th>ID категории для экспорта</th>
                     <th>Процент накрутки</th>
                     <th>Обработан</th>
                     <th></th>
@@ -32,7 +31,6 @@
                         <td>{{$no++}}</td>
                         <td>{{$source->url}}</td>
                         <td>{{$source->category_id}}</td>
-                        <td>{{$source->category_id_2}}</td>
                         <td>{{$source->procent_nakrutki}}</td>
                         <td>
                             @if( $source->review )
