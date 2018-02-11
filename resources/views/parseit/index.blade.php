@@ -14,7 +14,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <span class="label label-default">Страниц</span>
+                            <span class="label label-default">Источников</span>
                             <span class="label label-info">всего: <span class="badge" id="source_all">{{ $parsing_info['всего'] }}</span></span>
                             <span class="label label-primary">просмотренно: <span class="badge" id="source_review">{{ $parsing_info['просмотренно'] }}</span></span>
                         </div>
