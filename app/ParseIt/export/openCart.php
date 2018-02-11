@@ -49,6 +49,7 @@ class openCart{
             'product_id' => $product_id,
             'language_id' => '1',
             'name' => $name,
+            'meta_title' => $data['sku'],
             'description' => htmlspecialchars( $data['description'] )
         );
         $this->update( $this->prefix."product_description", $product_description, array( 'product_id' => $product_id ) );
@@ -111,10 +112,12 @@ class openCart{
             'product_id' => $product_id,
             'language_id' => '1',
             'name' => $name,
+            'meta_title' => $data['sku'],
             'description' => htmlspecialchars( $data['description'] )
         );
         $this->insert( $this->prefix."product_description", $product_description );
         $this->insert( $this->prefix.'product_to_store', array('product_id' => $product_id, 'store_id'=>0) );
+        $this->insert( $this->prefix.'product_to_layout', array('product_id' => $product_id, 'store_id'=>0, 'layout_id'=>0) );
         
         return $product_id;
     }
