@@ -160,14 +160,14 @@ class ParseitController extends Controller
                                 $data['hash'] = md5($data['hash'] . $source->donor_id);
                                 $data['exported'] = 0;
                                 $data['updated_at'] = date('Y-m-d H:i:s');
-                                $data['procent_nakrutki'] = $source->procent_nakrutki;
+                                $data['procent_nakrutki'] = isset($source->procent_nakrutki) && !empty($source->procent_nakrutki) ? $source->procent_nakrutki : 0;
                                 $data['category_id'] = $source->category_id;
 
                                 $validator = \Validator::make($data, [
                                     'exported' => 'required|boolean',
                                     'hash' => 'required|string|size:32',
                                     'donor_id' => 'required|int|max:11',
-                                    'source' => 'required|string|max:255',
+                                    'source' => 'required|string',
                                     //'manufacturer' => 'required|string|max:255',
                                     'product_name' => 'required|string|max:255',
                                     'sku' => 'required|string|max:255',
@@ -180,7 +180,7 @@ class ParseitController extends Controller
 //                                'gallery' => 'required|string',
                                     'product_attributes' => 'required|string',
 //                                    'category_id' => 'required|int',
-                                    'procent_nakrutki' => 'required|int'
+//                                    'procent_nakrutki' => 'required|int'
                                 ]);
                                 if ($validator->errors()->count())
                                 {
