@@ -71,13 +71,13 @@ class SourceController extends Controller
         $this->validate($request,[
             'url' => 'required',
 //            'category_id' => 'integer|required',
-            'procent_nakrutki' => 'integer|required',
+//            'procent_nakrutki' => 'integer|required',
         ]);
         // create new data
         $source = new Source();
         $source->url = $request->url;
         $source->category_id = $request->category_id;
-        $source->procent_nakrutki = $request->procent_nakrutki;
+        $source->procent_nakrutki = isset($request->procent_nakrutki) && !empty($request->procent_nakrutki) ? $request->procent_nakrutki : 0;
         $source->type_id = 0;
         @$request->review == 'on' ? $source->review = true : $source->review = false;
         $source->hash = md5($request->donor_id.$request->url);
@@ -133,7 +133,7 @@ class SourceController extends Controller
         $source = Source::findOrFail($id);
         $source->url = $request->url;
         $source->category_id = $request->category_id;
-        $source->procent_nakrutki = $request->procent_nakrutki;
+        $source->procent_nakrutki = isset($request->procent_nakrutki) && !empty($request->procent_nakrutki) ? $request->procent_nakrutki : 0;
         @$request->review == 'on' ? $source->review = true : $source->review = false;
         $source->save();
 
