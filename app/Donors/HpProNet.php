@@ -49,13 +49,28 @@ Class HpProNet extends simpleParser {
         else
         {
             $products = $nokogiri->get("input[name=redirect_url]")->toArray();
-            foreach ($products as $product)
+            if ( !empty(@$products[0]['value']) )
             {
-                $sources[] = [
-                    'url' => $this->fixUrl($product['value']),
-                    'cookieFile' => $this->cookieFile,
-                    'referer' => $url
-                ];
+                foreach ($products as $product)
+                {
+                    $sources[] = [
+                        'url' => $this->fixUrl($product['value']),
+                        'cookieFile' => $this->cookieFile,
+                        'referer' => $url
+                    ];
+                }
+            }
+            else
+            {
+                $products = $nokogiri->get(".good_close_look a")->toArray();
+                foreach ($products as $product)
+                {
+                    $sources[] = [
+                        'url' => $this->fixUrl($product['href']),
+                        'cookieFile' => $this->cookieFile,
+                        'referer' => $url
+                    ];
+                }
             }
             if ( $next = @$nokogiri->get(".prev_link")->toArray()[0] )
             {
