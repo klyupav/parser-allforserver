@@ -29,7 +29,7 @@
                 @foreach($sources as $source)
                     <tr>
                         <td>{{$no++}}</td>
-                        <td>{{$source->url}}</td>
+                        <td><a href="{{$source->url}}">{{ \Illuminate\Support\Str::limit($source->url, 30) }}</a></td>
                         <td>{{$source->category_id}}</td>
                         <td>{{$source->procent_nakrutki}}</td>
                         <td>

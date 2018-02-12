@@ -15,7 +15,7 @@ class CreateSourcesTable extends Migration
     {
         Schema::create('sources', function(Blueprint $table){
             $table->increments('id');
-            $table->string('url');
+            $table->text('url');
             $table->longText('source');
             $table->integer('type_id')->default(0);
             $table->boolean('review')->default(false);
